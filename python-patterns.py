@@ -281,6 +281,174 @@ print(sorted_by_length)  # ['date', 'apple', 'cherry', 'banana']
 # Formula: sorted(collection, key=function)
 
 # ============================================================================
+# SECTION 9: STRING MANIPULATION PATTERNS
+# ============================================================================
+
+# [ JOIN & SPLIT ]
+# Pattern: Join list elements with separator
+words = ['apple', 'banana', 'cherry']
+sentence = ' '.join(words)
+print(sentence)  # apple banana cherry
+# Formula: separator.join(collection)
+
+# Pattern: Split and clean strings
+text = "apple, banana, cherry"
+items = [item.strip() for item in text.split(',')]
+print(items)  # ['apple', 'banana', 'cherry']
+# Formula: [item.strip() for item in string.split(separator)]
+
+# [ STRING FORMATTING ]
+# Pattern: F-string with expressions
+name, age = "Alice", 25
+formatted = f"Hello {name}, you are {age} years old"
+print(formatted)  # Hello Alice, you are 25 years old
+# Formula: f"text {variable} more text"
+
+# Pattern: Format with padding/alignment
+numbers = [1, 22, 333]
+padded = [f"{num:>5}" for num in numbers]  # Right-align, width 5
+print(padded)  # ['    1', '   22', '  333']
+# Formula: f"{value:>width}" or f"{value:<width}" or f"{value:^width}"
+
+# ============================================================================
+# SECTION 10: FILE & PATH PATTERNS
+# ============================================================================
+
+# [ PATH OPERATIONS ]
+from pathlib import Path
+
+# Pattern: Build cross-platform paths
+file_path = Path("data") / "files" / "document.txt"
+print(file_path)  # data/files/document.txt (or data\files\document.txt on Windows)
+# Formula: Path(part1) / part2 / part3
+
+# Pattern: Get file info
+current_files = [p.name for p in Path('.').iterdir() if p.is_file()]
+print(current_files)  # List of files in current directory
+# Formula: [p for p in Path(directory).iterdir() if p.is_file()]
+
+# [ FILE READING ]
+# Pattern: Safe file reading with context manager (example structure)
+# with open('file.txt', 'r') as f:
+#     lines = [line.strip() for line in f]
+# Formula: with open(file, mode) as f: [line.strip() for line in f]
+
+# ============================================================================
+# SECTION 11: ERROR HANDLING PATTERNS
+# ============================================================================
+
+# [ TRY-EXCEPT PATTERNS ]
+# Pattern: Convert with fallback
+def safe_convert(value, default=0):
+    try:
+        return int(value)
+    except (ValueError, TypeError):
+        return default
+
+test_values = ['42', 'abc', None, '3.14']
+converted = [safe_convert(val) for val in test_values]
+print(converted)  # [42, 0, 0, 0]
+# Formula: try: convert(value) except: return default
+
+# Pattern: Multiple operations with single handler
+operations = [lambda: 10//2, lambda: int('abc'), lambda: 42]
+results = []
+for op in operations:
+    try:
+        results.append(op())
+    except:
+        results.append(None)
+print(results)  # [5, None, 42]
+# Formula: try: operation() except: fallback_value
+
+# ============================================================================
+# SECTION 12: FUNCTIONAL PROGRAMMING PATTERNS
+# ============================================================================
+
+# [ MAP, FILTER, LAMBDA ]
+# Pattern: Apply function to all elements
+numbers = [1, 2, 3, 4, 5]
+doubled = list(map(lambda x: x * 2, numbers))
+print(doubled)  # [2, 4, 6, 8, 10]
+# Formula: list(map(function, collection))
+
+# Pattern: Filter with condition
+evens = list(filter(lambda x: x % 2 == 0, numbers))
+print(evens)  # [2, 4]
+# Formula: list(filter(condition_function, collection))
+
+# Pattern: Chain operations with partial
+from functools import partial
+multiply_by_3 = partial(lambda x, y: x * y, 3)
+tripled = list(map(multiply_by_3, numbers))
+print(tripled)  # [3, 6, 9, 12, 15]
+# Formula: partial(function, fixed_args)
+
+# ============================================================================
+# SECTION 13: DATE & TIME PATTERNS
+# ============================================================================
+
+# [ DATETIME OPERATIONS ]
+from datetime import datetime, timedelta
+
+# Pattern: Date arithmetic
+today = datetime.now()
+week_ago = today - timedelta(days=7)
+print(f"Today: {today.strftime('%Y-%m-%d')}")
+print(f"Week ago: {week_ago.strftime('%Y-%m-%d')}")
+# Formula: datetime.now() ± timedelta(days=n, hours=n, minutes=n)
+
+# Pattern: Format dates
+formatted = today.strftime("%Y-%m-%d %H:%M")
+print(f"Formatted: {formatted}")
+# Formula: date.strftime("format_string")
+
+# Pattern: Parse date strings
+date_str = "2023-12-25"
+parsed = datetime.strptime(date_str, "%Y-%m-%d")
+print(f"Parsed: {parsed}")
+# Formula: datetime.strptime(string, "format")
+
+# ============================================================================
+# SECTION 14: DATA VALIDATION PATTERNS
+# ============================================================================
+
+# [ VALIDATION HELPERS ]
+# Pattern: Check if all/any elements meet condition
+numbers = [2, 4, 6, 8]
+all_even = all(x % 2 == 0 for x in numbers)
+any_negative = any(x < 0 for x in numbers)
+print(f"All even: {all_even}")  # True
+print(f"Any negative: {any_negative}")  # False
+# Formula: all(condition for item in collection)
+# Formula: any(condition for item in collection)
+
+# Pattern: Validate dictionary keys
+required_keys = {'name', 'age', 'email'}
+data = {'name': 'John', 'age': 30, 'email': 'john@email.com'}
+is_valid = required_keys.issubset(data.keys())
+print(f"Valid data: {is_valid}")  # True
+# Formula: required_set.issubset(data.keys())
+
+# ============================================================================
+# SECTION 15: PERFORMANCE PATTERNS
+# ============================================================================
+
+# [ GENERATOR EXPRESSIONS ]
+# Pattern: Memory-efficient processing
+large_numbers = (x**2 for x in range(100) if x % 2 == 0)  # Using smaller range for demo
+first_ten = [next(large_numbers) for _ in range(10)]
+print(first_ten)  # [0, 4, 16, 36, 64, 100, 144, 196, 256, 324]
+# Formula: (expression for item in collection if condition)
+
+# Pattern: Lazy evaluation with itertools
+from itertools import islice, cycle
+repeated = cycle(['A', 'B', 'C'])
+first_ten_repeated = list(islice(repeated, 10))
+print(first_ten_repeated)  # ['A', 'B', 'C', 'A', 'B', 'C', 'A', 'B', 'C', 'A']
+# Formula: list(islice(iterator, n))
+
+# ============================================================================
 # QUICK REFERENCE FORMULAS
 # ============================================================================
 
@@ -317,4 +485,31 @@ Sequence Operations:
   enumerate(collection)                                 # Add indices
   collection[::-1]                                      # Reverse
   sorted(collection, key=function)                      # Custom sort
+
+String Manipulation:
+  separator.join(collection)                            # Join elements
+  [item.strip() for item in string.split(sep)]         # Split and clean
+  f"text {variable} more text"                          # F-string formatting
+
+Error Handling:
+  try: operation() except: fallback_value               # Safe operations
+
+Functional Programming:
+  list(map(function, collection))                       # Apply function to all
+  list(filter(condition, collection))                   # Filter elements
+  partial(function, fixed_args)                         # Partial application
+
+Date & Time:
+  datetime.now() ± timedelta(days=n)                    # Date arithmetic
+  date.strftime("format_string")                        # Format dates
+  datetime.strptime(string, "format")                   # Parse dates
+
+Validation:
+  all(condition for item in collection)                 # Check all elements
+  any(condition for item in collection)                 # Check any elements
+  required_set.issubset(data.keys())                    # Validate keys
+
+Performance:
+  (expression for item in collection)                   # Generator expression
+  list(islice(iterator, n))                             # Lazy evaluation
 """
